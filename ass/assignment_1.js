@@ -50,12 +50,10 @@ switch (day) {
     console.log("nit a valid day");
 }
 
-
 //prob 7 :
 let strings = ["fatma", "abd", "elmotagly"];
 let length = strings.map((str) => str.length);
 console.log(length);
-
 
 //prob 8 :
 let num = 15;
@@ -64,38 +62,50 @@ else if (num % 3 == 0) console.log("Divisible by 3 only");
 else if (num % 5 == 0) console.log("Divisible by 5 only");
 else console.log("not divisible by either 3 nor 5");
 
-
 //prob 9 :
 let num1 = 5;
 const square = (num) => num ** 2;
 console.log(square(num1));
 
-
 //prob 10 :
-const person ={
-  name : "fatma",
-  age : "21",
-}
+const person = {
+  name: "fatma",
+  age: "21",
+};
 
-function dis (obj){
-  const  { name , age}= obj;
-  return `i'm ${name} and i'm ${age} old`
-  
+function dis(obj) {
+  const { name, age } = obj;
+  return `i'm ${name} and i'm ${age} old`;
 }
 console.log(dis(person));
 
-
 //prob 11 :
-function sum (...nums){
-  let total=0;
-  for (let num of nums){
-    total+=num;
+function sum(...nums) {
+  let total = 0;
+  for (let num of nums) {
+    total += num;
   }
   return total;
 }
-console.log(sum(1,2,3,4,5));
+console.log(sum(1, 2, 3, 4, 5));
 
 //prob 12 :
 //prob 13 :
+let arr = [1,2,3,4];
+function largest (array){
+  let max = Number.MIN_VALUE;
+  for (num of array){
+    if (max < num) max = num;
+  }
+  return max
+}
+console.log(largest(arr));
+
 //prob 14 :
 //prob 15 :
+let string ="The quick brown fox";
+ function spliter (str){
+  return str.split(" ");
+}
+
+console.log(spliter(string));
