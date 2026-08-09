@@ -1,12 +1,15 @@
-const { resolve } = require("node:dns");
-const fs = require("node:fs")
-const path = require("path")
+const fs = require("node:fs");
+const path = require("path");
 const EventEmitter = require("events");
 const os = require("os");
 const zlib = require("zlib");
+const http = require("http");
 const { pipeline } = require("stream");
+const { error } = require("node:console");
+const { getDefaultHighWaterMark } = require("node:stream");
 const event = new EventEmitter();
 const filePath = path.resolve("./index.js");
+
 const file = {
      dir:"folder",
       name:"app",
@@ -68,7 +71,7 @@ console.log(joinSegmants("folder1", "folder2/file.txt"));
 // }
 // deleteFile(filePath)
 
-//prob 11 : 
+//prob 11 :
 function createFolder(folderName) {
     try {
         fs.mkdirSync(folderName);
@@ -163,3 +166,181 @@ function compress(sourcePath, destPath) {
 }
 compress("./source.txt", "./data.txt.gz");
 ////////////////////////////////////////////////////////////////////////////////////////////
+
+const port = 3000;
+const HttpServer = http.createServer((req, res) => {
+  const { url, method } = req;
+  //prob 1 part 2 :
+  if (url == "/user" && method == "POST") {
+    let data = "";
+    req.on("data", (chunk) => {
+      data += chunk;
+    });
+    req.on("end", () => {
+      data = JSON.parse(data);
+      const { userName, email, password } = data;
+      const readFile = fs.readFile(
+        path.resolve("./users.json"),
+        "utf-8",
+        (error, data) => {
+          if (error) {
+            res.writeHead(500);
+            res.write("error reading the file");
+            res.end();
+          } else {
+            data = JSON.parse(data);
+            const match = data.find((ele) => ele.email == email);
+
+            if (match) {
+              res.writeHead(409);
+              res.write("Email Exists");
+              res.end();
+            } else {
+              data.push({ id: Date.now(), userName, email, password });
+              fs.writeFile(
+                path.resolve("./users.json"),
+                JSON.stringify(data),
+                "utf-8",
+                (error) => {
+                  if (error) {
+                    res.write("faild to write on the file ");
+                    res.end();
+                  } else {
+                    res.writeHead(201);
+                    res.write("Done");
+                    res.end();
+                  }
+                },
+              );
+            }
+          }
+        },
+      );
+    });
+
+    // prob 2 part 2 :
+  } else if (
+    url.split("/")[1] == "user" &&
+    url.split("/")[2] &&
+    method == "PATCH"
+  ) {
+    const id = url.split("/")[2];
+    let data = "";
+    req.on("data", (chunk) => {
+      data += chunk;
+    });
+    req.on("end", () => {
+      data = JSON.parse(data);
+      fs.readFile(path.resolve("./users.json"), "utf-8", (error, filedata) => {
+        if (error) {
+          res.writeHead(500);
+          res.write("error reading the file ");
+          res.end();
+        } else {
+          filedata = JSON.parse(filedata);
+          const { userName, password, email } = data;
+          const user = filedata.find((ele) => ele.id == id);
+          if (!user) {
+            res.writeHead(404);
+            res.write("can not find user with this id number");
+            res.end();
+          } else {
+            if (userName != undefined) {
+              user.userName = userName;
+            }
+            if (email != undefined) {
+              user.email = email;
+            }
+            if (password != undefined) {
+              user.password = password;
+            }
+
+            fs.writeFile(
+              path.resolve("./users.json"),
+              JSON.stringify(filedata),
+              "utf-8",
+              (error) => {
+                if (error) {
+                  res.writeHead(500);
+                  res.end("can not update user");
+                } else {
+                  res.writeHead(200);
+                  res.end("changed");
+                }
+              },
+            );
+          }
+        }
+      });
+    });
+    //prob 3 part 2 :
+  }else if(method == "DELETE"&& url.split("/")[1]=="user"&& url.split("/")[2]){
+    const id =url.split("/")[2];
+  
+        fs.readFile(path.resolve("./users.json"),"utf-8",(err,fileData)=>{
+            
+            if(err){
+                res.writeHead(500)
+                res.end("error reading the file")
+            }else{
+                fileData = JSON.parse(fileData)
+                const user= fileData.find(ele=>ele.id==id)
+                if (!user){
+                    res.writeHead(404)
+                    res.end("user not found")
+                }else{
+                    fileData=fileData.filter(ele=>ele.id != id)
+                    fs.writeFile(path.resolve("./users.json"),JSON.stringify(fileData),"utf-8",(error)=>{
+                        if(error){
+                            res.writeHead(500)
+                            res.end("faild to delete user")
+                        }else{
+                            res.writeHead(200)
+                            res.end("user deleted")
+                        }
+                    })
+                  
+                }
+            }
+        })
+        //prob 4 part 2 :
+
+  }else if(method == "GET"&& url == "/user"){
+    fs.readFile(path.resolve("./users.json"),"utf-8",(error,data)=>{
+        if (error){
+            res.writeHead(500)
+            res.end("error reading the users")
+        }else{
+            data = JSON.parse(data)
+            res.write(JSON.stringify(data))
+            res.end()
+
+        }
+    })
+//prob 5 part 2 :
+  }
+  else if(method == "GET" && url.split("/")[1]=="user" && url.split("/")[2]){
+    const id = url.split("/")[2];
+    fs.readFile(path.resolve("./users.json"),"utf-8",(err, data)=>{
+        if (err){
+            res.writeHead(500)
+            res.end("faild reading the file ")
+        }else {
+            data=JSON.parse(data)
+            const user = data.find(ele=>ele.id==id)
+            if(!user){
+                res.writeHead(404)
+                res.end("user not found ")
+            }else{
+                res.writeHead(200)
+                res.write(JSON.stringify(user))
+                res.end()
+            }
+        }
+    })
+  }
+});
+
+HttpServer.listen(port, () => {
+  console.log(`server is running on port ${port} 🌸`);
+});
