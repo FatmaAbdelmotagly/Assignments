@@ -59,17 +59,17 @@ function joinSegmants(...part){
 }
 console.log(joinSegmants("folder1", "folder2/file.txt"));
 // prob 10 :
-// function deleteFile(filePath) {
-//     const fileName = path.basename(filePath);
-//     fs.unlink(filePath, (err) => {
-//         if (err) {
-//             console.log(`ERROR: ${err.message}`);
-//             return;
-//         }
-//         console.log(`The file ${fileName} is deleted.`);
-//     });
-// }
-// deleteFile(filePath)
+function deleteFile(filePath) {
+    const fileName = path.basename(filePath);
+    fs.unlink(filePath, (err) => {
+        if (err) {
+            console.log(`ERROR: ${err.message}`);
+            return;
+        }
+        console.log(`The file ${fileName} is deleted.`);
+    });
+}
+deleteFile(filePath)
 
 //prob 11 :
 function createFolder(folderName) {
@@ -111,20 +111,20 @@ function getInfo() {
 
 console.log(getInfo());
 // prob 18 :
-// const stream = fs.createReadStream("./big.html", {
-//     encoding: "utf8",
-//     highWaterMark: 100
-// });
-// stream.on("data", (chunk) => {
-//     console.log(chunk);
-// });
-// stream.on("end", () => {
-//     console.log("Finished ");
-// });
-// stream.on("error", (err) => {
-//     console.log(err.message);
-// });
-//prob 19 :
+const stream = fs.createReadStream("./big.html", {
+    encoding: "utf8",
+    highWaterMark: 100
+});
+stream.on("data", (chunk) => {
+    console.log(chunk);
+});
+stream.on("end", () => {
+    console.log("Finished ");
+});
+stream.on("error", (err) => {
+    console.log(err.message);
+});
+// prob 19 :
 function copyFile(sourcePath, destPath) {
     const readStream = fs.createReadStream(sourcePath);
     const writeStream = fs.createWriteStream(destPath);
