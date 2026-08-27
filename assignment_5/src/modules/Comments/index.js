@@ -1,0 +1,1 @@
+export {default as commentController} from './commentController.js'
