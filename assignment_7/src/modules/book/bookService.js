@@ -1,7 +1,7 @@
 import { db } from "../../DB/DBconnection.js";
 //1
 export const createBooksCollection = async () => {
-  const books = await db.createCollection("Books", {
+   await db.createCollection("Books", {
     validator: {
       $jsonSchema: {
         bsonType: "object",
