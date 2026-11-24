@@ -1,3 +1,4 @@
+
 var longestCommonPrefix = function(strs) {
     let pre = "";
     let shortestWord = 10000;
@@ -15,10 +16,5 @@ var longestCommonPrefix = function(strs) {
             return pre;
         }
         pre += firstChar;
-    }
-    return pre;
-};
-
-console.log(longestCommonPrefix( ["flower","flow","flight"]));
-
-
+    }}
+console.log(longestCommonPrefix(["flower","flow","flight"]));

@@ -1,0 +1,32 @@
+{
+  "dependencies": {
+    "cross-env": "^10.1.0",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "mysql2": "^3.23.3",
+    "sequelize": "^6.37.8"
+  },
+  "name": "assignments",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./assignment_4/src/index.jss",
+  "scripts": {
+    "start:dev": "cross-env NODE_ENV=development node --watch ./assignment_4/src/index.js",
+    "start:pro": "cross-env NODE_ENV=production node --watch ./assignment_4/src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FatmaAbdelmotagly/Assignments.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/FatmaAbdelmotagly/Assignments/issues"
+  },
+  "homepage": "https://github.com/FatmaAbdelmotagly/Assignments#readme",
+  "devDependencies": {
+    "typescript": "^7.0.2"
+  }
+}
